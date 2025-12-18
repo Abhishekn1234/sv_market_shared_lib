@@ -3,3 +3,7 @@ export * from './users';
 export * from './enums';
 export * from './user-groups';
 export * from './cloudinary';
+export * from './interfaces';
+export * from './services';
+export * from './categories';
+export * from './common-dtos';
