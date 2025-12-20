@@ -7,3 +7,4 @@ export * from './interfaces';
 export * from './services';
 export * from './categories';
 export * from './common-dtos';
+export * from './booking';
