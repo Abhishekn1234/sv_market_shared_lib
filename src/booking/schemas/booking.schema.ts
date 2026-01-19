@@ -73,6 +73,24 @@ export class BookingEntity {
 
     @Prop({default:false})
     isFinalized?: boolean;
+
+    @Prop({
+        type: {
+            type: String,
+            enum: ["Point"],
+            default: "Point"
+        },
+        coordinates: {
+            type: [Number], // [lng, lat]
+            required: true
+        }
+    })
+    location: {
+        type: "Point";
+        coordinates: [number, number];
+    };
 }
 
 export const BookingSchema = SchemaFactory.createForClass(BookingEntity);
+
+BookingSchema.index({location:"2dsphere"});
