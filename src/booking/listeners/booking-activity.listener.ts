@@ -31,14 +31,25 @@ export class BookingActivityListener {
         [BookingEvents.CANCELLEDLED_BY_PLATFORM]: BookingActivityType.CANCELLED_BY_PLATFORM,
 
         [BookingEvents.REVIEWED]: BookingActivityType.REVIEWED,
-        [BookingEvents.EXPIRED]: BookingActivityType.EXPIRED
+        [BookingEvents.EXPIRED]: BookingActivityType.EXPIRED,
+
+        // New Workflow Event Mappings
+        [BookingEvents.WORK_START_OTP_GENERATED]: BookingActivityType.WORK_START_OTP_GENERATED,
+        [BookingEvents.WORK_STARTED]: BookingActivityType.WORK_STARTED,
+        [BookingEvents.WORK_COMPLETED_BY_WORKER]: BookingActivityType.WORK_COMPLETED_BY_WORKER,
+        [BookingEvents.COMPLETION_OTP_GENERATED]: BookingActivityType.COMPLETION_OTP_GENERATED,
+        [BookingEvents.COMPLETION_CONFIRMED]: BookingActivityType.COMPLETION_CONFIRMED,
+        [BookingEvents.INVOICE_GENERATED]: BookingActivityType.INVOICE_GENERATED,
+        [BookingEvents.PAYMENT_INITIATED]: BookingActivityType.PAYMENT_INITIATED,
+        [BookingEvents.PAYMENT_COMPLETED]: BookingActivityType.PAYMENT_COMPLETED,
+        [BookingEvents.PAYMENT_FAILED]: BookingActivityType.PAYMENT_FAILED
     };
 
 
     @OnEvent('booking.*')
     async handleBookingEvent(event: any) {
         const activityType = this.EVENT_TO_ACTIVITY_MAP[event.eventName];
-        if (!activityType){ 
+        if (!activityType) {
             return;
         }
         await this.activityService.logActivity(event.bookingId, event.actorId, activityType);

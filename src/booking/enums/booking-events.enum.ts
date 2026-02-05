@@ -21,5 +21,19 @@ export enum BookingEvents {
   CANCELLEDLED_BY_PLATFORM = "booking.cancelled.platform",
 
   REVIEWED = "booking.reviewed",
-  EXPIRED = "booking.expired"
+  EXPIRED = "booking.expired",
+
+  // New events for OTP workflow
+  WORK_START_OTP_GENERATED = "booking.work-start-otp.generated",
+  WORK_STARTED = "booking.work.started",
+  WORK_COMPLETED_BY_WORKER = "booking.work.completed-by-worker",
+  COMPLETION_OTP_GENERATED = "booking.completion-otp.generated",
+  COMPLETION_CONFIRMED = "booking.completion.confirmed",
+
+  // Invoice and Payment events
+  INVOICE_GENERATED = "booking.invoice.generated",
+  PAYMENT_INITIATED = "booking.payment.initiated",
+  PAYMENT_COMPLETED = "booking.payment.completed",
+  PAYMENT_FAILED = "booking.payment.failed"
 }
+

@@ -9,58 +9,58 @@ import { BookingType } from "../enums/booking-type.enum";
 
 export type BookingDocument = HydratedDocument<BookingEntity & BaseTimestamp>
 
-@Schema({collection:"bookings",timestamps: true,versionKey:false})
+@Schema({ collection: "bookings", timestamps: true, versionKey: false })
 export class BookingEntity {
-    @Prop({required:true,ref: UserEntity.name,type: Types.ObjectId})
+    @Prop({ required: true, ref: UserEntity.name, type: Types.ObjectId })
     userId: Types.ObjectId;
 
-    @Prop({required:true,ref: ServiceEntity.name,type: Types.ObjectId})
+    @Prop({ required: true, ref: ServiceEntity.name, type: Types.ObjectId })
     serviceId: Types.ObjectId;
 
-    @Prop({required:true})
+    @Prop({ required: true })
     bookingType: BookingType;
 
-    @Prop({required:false,type: BookingSchedule})
+    @Prop({ required: false, type: BookingSchedule })
     schedule?: BookingSchedule;
 
-    @Prop({required:true,enum: BookingStatus, default:BookingStatus.REQUESTED})
+    @Prop({ required: true, enum: BookingStatus, default: BookingStatus.REQUESTED })
     status: BookingStatus;
 
-    @Prop({required:true, ref: ServiceTier.name, type: Types.ObjectId})
+    @Prop({ required: true, ref: ServiceTier.name, type: Types.ObjectId })
     serviceTierId: Types.ObjectId;
 
-    @Prop({required:true,enum: PricingMode, default:PricingMode.HOURLY})
+    @Prop({ required: true, enum: PricingMode, default: PricingMode.HOURLY })
     pricingMode: PricingMode;
 
-    @Prop({required:true})
+    @Prop({ required: true })
     currency: string;
 
-    @Prop({required:true})
+    @Prop({ required: true })
     amount: number;
 
-    @Prop({required:true})
+    @Prop({ required: true })
     commissionValue: number;
 
-    @Prop({required:true})
+    @Prop({ required: true })
     commissionType: string;
 
-    @Prop({required:true})
+    @Prop({ required: true })
     commissionAmount: number;
 
-    @Prop({required:true})
-    numberOfWorkers:number;
+    @Prop({ required: true })
+    numberOfWorkers: number;
 
-    @Prop({required:false})
-    actualWorkersCount?:number;
+    @Prop({ required: false })
+    actualWorkersCount?: number;
 
-    @Prop({required:true})
-    workerPoolAmount:number;
+    @Prop({ required: true })
+    workerPoolAmount: number;
 
-    @Prop({required:false})
-    finalWorkerPoolAmount?:number;
-    
-    @Prop({required:false})
-    finalAmount?:number;
+    @Prop({ required: false })
+    finalWorkerPoolAmount?: number;
+
+    @Prop({ required: false })
+    finalAmount?: number;
 
     @Prop()
     startedAt?: Date;
@@ -71,8 +71,20 @@ export class BookingEntity {
     @Prop()
     workDescription?: string;
 
-    @Prop({default:false})
+    @Prop({ default: false })
     isFinalized?: boolean;
+
+    @Prop()
+    actualWorkHours?: number;
+
+    @Prop()
+    actualWorkDays?: number;
+
+    @Prop({ type: Types.ObjectId, ref: 'InvoiceEntity' })
+    invoiceId?: Types.ObjectId;
+
+    @Prop({ type: Types.ObjectId, ref: 'PaymentEntity' })
+    paymentId?: Types.ObjectId;
 
     @Prop({
         type: {
@@ -93,4 +105,4 @@ export class BookingEntity {
 
 export const BookingSchema = SchemaFactory.createForClass(BookingEntity);
 
-BookingSchema.index({location:"2dsphere"});
+BookingSchema.index({ location: "2dsphere" });
