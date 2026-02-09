@@ -1,49 +1,27 @@
 {
-  "name": "@sv_market/shared",
-  "version": "1.5.0",
+  "name": "@svmarket/shared",
+  "version": "1.5.1",
   "description": "Shared DTOs, schemas, interfaces for SV projects",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
+  "private": false,
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "clean": "rm -rf dist"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
+    "prepare": "npm run build",
+    "clean": "rimraf dist"
   },
   "devDependencies": {
-    "@nestjs/common": "^11.1.9",
-    "@nestjs/core": "^11.1.9",
-    "@nestjs/passport": "^11.0.5",
-    "@types/express": "^5.0.6",
-    "@types/multer": "^2.0.0",
-    "@types/passport": "^1.0.17",
-    "@types/passport-jwt": "^4.0.1",
-    "passport": "^0.7.0",
-    "passport-jwt": "^4.0.1",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "rimraf": "^5.0.5"
   },
   "peerDependencies": {
-    "@nestjs/common": "^11.1.9",
-    "@nestjs/core": "^11.1.9",
-    "@nestjs/passport": "^11.0.5",
-    "passport": "^0.7.0",
-    "passport-jwt": "^4.0.1"
-  },
-  "dependencies": {
-    "@nestjs/event-emitter": "^3.0.1",
-    "@nestjs/jwt": "^11.0.2",
-    "@nestjs/mongoose": "^11.0.4",
-    "@nestjs/swagger": "^11.2.3",
-    "bcrypt": "^6.0.0",
-    "class-transformer": "^0.5.1",
-    "class-validator": "^0.14.3",
-    "cloudinary": "^2.8.0",
-    "ioredis": "^5.8.2",
-    "mongoose": "^9.0.1",
-    "multer": "^2.0.2"
+    "@nestjs/common": "^11",
+    "@nestjs/core": "^11",
+    "@nestjs/mongoose": "^11",
+    "@nestjs/swagger": "^11",
+    "mongoose": "^9",
+    "class-validator": "^0.14",
+    "class-transformer": "^0.5"
   }
 }
