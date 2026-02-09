@@ -10,6 +10,9 @@ export class Location {
 
   @Prop({ default: '' })
   office: string;
+  
+  @Prop({default:''})
+  inputValue:string;
 }
 
 export const LocationSchema = SchemaFactory.createForClass(Location);
