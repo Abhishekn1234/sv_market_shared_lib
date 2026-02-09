@@ -10,3 +10,4 @@ export * from './common-dtos';
 export * from './booking';
 export * from './worker';
 export * from "./language";
+export * from "./location";
