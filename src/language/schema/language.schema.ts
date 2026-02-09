@@ -1,16 +1,12 @@
-import { LanguageCode } from "../../enums";
-import { Prop,Schema,SchemaFactory } from "@nestjs/mongoose";
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
-@Schema({ timestamps: true })
+export type LanguageDocument = Language & Document;
+
+@Schema({ collection: 'languages' })
 export class Language {
-
-
-  @Prop({
-    type: String,
-    enum: Object.values(LanguageCode),
-    default: LanguageCode.EN,
-  })
-  language: LanguageCode;
+  @Prop({ required: true })
+  language: string;
 }
 
 export const LanguageSchema = SchemaFactory.createForClass(Language);

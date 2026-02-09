@@ -1,8 +1,8 @@
-import { IsEnum } from "class-validator";
-import { LanguageCode } from "../../enums";
+import { ApiProperty } from '@nestjs/swagger';
+import { IsString } from 'class-validator';
+
 export class SelectLanguageDto {
-  @IsEnum(LanguageCode, {
-    message: "Language must be en, hi, or ar",
-  })
-  language: LanguageCode;
+  @ApiProperty({ example: 'en', description: 'Language code' })
+  @IsString()
+  language: string;
 }
