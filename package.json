@@ -1,5 +1,5 @@
 {
-  "name": "@faizudheen/shared",
+ "name": "@svmarket/shared-lib",
   "version": "1.5.0",
   "description": "Shared DTOs, schemas, interfaces for SV projects",
   "main": "dist/index.js",
