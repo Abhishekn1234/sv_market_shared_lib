@@ -3,8 +3,7 @@ import { Prop,Schema,SchemaFactory } from "@nestjs/mongoose";
 
 @Schema({ timestamps: true })
 export class Language {
-  @Prop({ required: true })
-  mobile: string;
+
 
   @Prop({
     type: String,
