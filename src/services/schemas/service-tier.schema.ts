@@ -15,6 +15,8 @@ export class ServiceTier {
 
     @Prop()
     description?: string;
+    @Prop()
+    features?:string[];
 
     @Prop({default: true})
     isActive: boolean;
