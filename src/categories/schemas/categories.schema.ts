@@ -14,6 +14,8 @@ export class CategoriesEntity {
 
     @Prop()
     iconUrl?: string;
+    @Prop()
+    description?: string;
 
     @Prop()
     iconPublicId?: string;

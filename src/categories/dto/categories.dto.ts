@@ -25,6 +25,11 @@ export class CategoriesDTO {
         description: 'Category icon URL',
     })
     iconUrl: string;
+    @ApiProperty({
+        example: 'Category for all electronic products',
+        description: 'Category description',
+    })
+    description?: string;
 
     @ApiProperty({
         example: '2023-12-03T10:30:00.000Z',
@@ -42,6 +47,7 @@ export class CategoriesDTO {
         this._id = category._id.toString();
         this.name = category.name;
         this.slug = category.slug;
+        this.description = category.description;
         this.iconUrl = category.iconUrl;
         this.createdAt = category.createdAt;
         this.updatedAt = category.updatedAt;
