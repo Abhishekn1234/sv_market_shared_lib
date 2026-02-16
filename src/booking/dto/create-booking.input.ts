@@ -80,11 +80,11 @@ export class CreateBookingInput {
   @Type(() => GeoPointDTO)
   location?: GeoPointDTO;
   @IsOptional()
-  @IsString()
+  @IsNumber()
   memberDiscount?:number;
 
   @IsOptional()
-  @IsString()
+  @IsNumber()
   serviceFee?:number;
 
 
