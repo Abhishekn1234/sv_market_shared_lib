@@ -156,6 +156,7 @@ export class BookingService {
     numberOfWorkers: input.numberOfWorkers,
     currency: service.currency,
     amount,
+    totalCost:amount,
     commissionType,
     commissionValue,
     commissionAmount,

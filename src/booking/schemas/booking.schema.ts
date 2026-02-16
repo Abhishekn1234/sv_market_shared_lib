@@ -37,6 +37,8 @@ export class BookingEntity {
 
     @Prop({ required: true })
     amount: number;
+    @Prop({})
+    totalCost?: number;
 
     @Prop({ required: true })
     commissionValue: number;
