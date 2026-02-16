@@ -87,7 +87,11 @@ export class BookingEntity {
 
     @Prop({ type: Types.ObjectId, ref: 'PaymentEntity' })
     paymentId?: Types.ObjectId;
+    @Prop({ type: Number, default: 0 })       // ✅ Add memberDiscount
+  memberDiscount: number;
 
+  @Prop({ type: Number, default: 0 })       // ✅ Add serviceFee
+  serviceFee: number;
     @Prop({
         type: {
             type: String,

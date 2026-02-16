@@ -115,6 +115,8 @@ export class BookingService {
     amount = tier.HOURLY.ratePerHour * input.estimatedHours * input.numberOfWorkers;
     console.log("Hourly Amount:", amount);
   }
+  amount=amount-(input.memberDiscount||0)+ (input.serviceFee||0);
+  console.log("Amount after discounts and fees:", amount);
 
   if (input.pricingMode === PricingMode.PER_DAY) {
     if (!tier.PER_DAY) throw new BadRequestException("Daily pricing not available");
@@ -156,6 +158,8 @@ export class BookingService {
     numberOfWorkers: input.numberOfWorkers,
     currency: service.currency,
     amount,
+    memberDiscount:input.memberDiscount,
+    serviceFee:input.serviceFee,
     totalCost:amount,
     commissionType,
     commissionValue,

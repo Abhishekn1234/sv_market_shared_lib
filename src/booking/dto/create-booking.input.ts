@@ -79,4 +79,13 @@ export class CreateBookingInput {
   @ValidateNested()
   @Type(() => GeoPointDTO)
   location?: GeoPointDTO;
+  @IsOptional()
+  @IsString()
+  memberDiscount?:number;
+
+  @IsOptional()
+  @IsString()
+  serviceFee?:number;
+
+
 }
