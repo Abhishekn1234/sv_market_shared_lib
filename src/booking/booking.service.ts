@@ -65,11 +65,10 @@ export class BookingService {
       throw new BadRequestException("Invalid number of workers");
     }
 
-   const tierObjectId = new Types.ObjectId(input.serviceTierId);
-
-const tier = service.pricingTiers.find(
-  t => t.tierId.equals(tierObjectId)
+   const tier = service.pricingTiers.find(
+  t => t.tierId.toString() === input.serviceTierId?.trim()
 );
+
     if (!tier) {
       throw new BadRequestException("Service tier not found");
     }
