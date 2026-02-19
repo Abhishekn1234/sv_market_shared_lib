@@ -355,4 +355,42 @@ export class BookingService {
 
     return booking;
   }
+  async getBookingFullDetails(bookingId: string) {
+  const populateConfig = [
+    {
+      path: "userId",
+      select: "fullName email phone profilePictureUrl address kycStatus"
+    },
+    {
+      path: "serviceId",
+      populate: [
+        {
+          path: "category",
+          select: "name slug iconUrl"
+        },
+        {
+          path: "pricingTiers.tierId",
+          select: "code displayName description features"
+        }
+      ]
+    },
+    {
+      path: "serviceTierId",
+      select: "code displayName description features"
+    }
+  ];
+
+  const booking = await this.bookingModel
+    .findById(bookingId)
+    .populate(populateConfig)
+    .lean()
+    .exec();
+
+  if (!booking) {
+    throw new NotFoundException("Booking not found");
+  }
+
+  return booking;
+}
+
 }
