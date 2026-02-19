@@ -217,15 +217,91 @@ export class BookingService {
    * @param userId 
    * @returns BookingDocument
    */
-  async findExistingBooking(userId: Types.ObjectId){
-    const booking = await this.bookingModel.findOne({
-      userId,
-      status: {
-        $in: [BookingStatus.REQUESTED, BookingStatus.WORKER_ACCEPTED, BookingStatus.WORKER_CANCELLED]
-      }
-    })
-    return booking;
-  }
+  async findExistingBooking(userId: Types.ObjectId) {
+  return this.bookingModel.aggregate([
+    {
+      $match: {
+        userId: new Types.ObjectId(userId),
+        status: {
+          $in: [
+            BookingStatus.REQUESTED,
+            BookingStatus.WORKER_ACCEPTED,
+            BookingStatus.WORKER_CANCELLED,
+          ],
+        },
+      },
+    },
+    // populate service
+    {
+      $lookup: {
+        from: "services",
+        localField: "serviceId",
+        foreignField: "_id",
+        as: "service",
+      },
+    },
+    { $unwind: "$service" },
+
+    // populate serviceTier
+    {
+      $lookup: {
+        from: "servicetiers",
+        localField: "serviceTierId",
+        foreignField: "_id",
+        as: "serviceTier",
+      },
+    },
+    { $unwind: "$serviceTier" },
+
+    // populate worker
+    {
+      $lookup: {
+        from: "worker",
+        localField: "workerId",
+        foreignField: "_id",
+        as: "worker",
+      },
+    },
+    { $unwind: { path: "$worker", preserveNullAndEmptyArrays: true } },
+
+    // populate worker's user
+    {
+      $lookup: {
+        from: "users",
+        localField: "worker.userId",
+        foreignField: "_id",
+        as: "workerUser",
+      },
+    },
+    { $unwind: { path: "$workerUser", preserveNullAndEmptyArrays: true } },
+
+    // combine worker info
+    {
+      $addFields: {
+        worker: {
+          $cond: [
+            { $ifNull: ["$worker", false] },
+            { $mergeObjects: ["$worker", { user: "$workerUser" }] },
+            null,
+          ],
+        },
+      },
+    },
+
+    {
+      $project: {
+        userId: 1,
+        status: 1,
+        amount: 1,
+        currency: 1,
+        service: 1,
+        serviceTier: 1,
+        worker: 1,
+      },
+    },
+  ]);
+}
+
 
   async sendBookingRequestNotification(bookingId: Types.ObjectId){
     const booking = await this.bookingModel.findById(bookingId);
