@@ -217,8 +217,9 @@ export class BookingService {
    * @param userId 
    * @returns BookingDocument
    */
-  async findExistingBooking(userId: Types.ObjectId) {
+ async findExistingBooking(userId: Types.ObjectId) {
   return this.bookingModel.aggregate([
+    // 1️⃣ Match bookings for this customer and active statuses
     {
       $match: {
         userId: new Types.ObjectId(userId),
@@ -231,7 +232,8 @@ export class BookingService {
         },
       },
     },
-    // populate service
+
+    // 2️⃣ Lookup service details
     {
       $lookup: {
         from: "services",
@@ -242,7 +244,7 @@ export class BookingService {
     },
     { $unwind: "$service" },
 
-    // populate serviceTier
+    // 3️⃣ Lookup serviceTier details
     {
       $lookup: {
         from: "servicetiers",
@@ -253,18 +255,18 @@ export class BookingService {
     },
     { $unwind: "$serviceTier" },
 
-    // populate worker
+    // 4️⃣ Lookup worker document
     {
       $lookup: {
         from: "worker",
-        localField: "workerId",
+        localField: "workerId", // <-- assigned worker
         foreignField: "_id",
         as: "worker",
       },
     },
     { $unwind: { path: "$worker", preserveNullAndEmptyArrays: true } },
 
-    // populate worker's user
+    // 5️⃣ Lookup worker's user details
     {
       $lookup: {
         from: "users",
@@ -275,7 +277,18 @@ export class BookingService {
     },
     { $unwind: { path: "$workerUser", preserveNullAndEmptyArrays: true } },
 
-    // combine worker info
+    // 6️⃣ Lookup customer details
+    {
+      $lookup: {
+        from: "users",
+        localField: "userId",
+        foreignField: "_id",
+        as: "customer",
+      },
+    },
+    { $unwind: "$customer" },
+
+    // 7️⃣ Merge worker and workerUser
     {
       $addFields: {
         worker: {
@@ -288,15 +301,32 @@ export class BookingService {
       },
     },
 
+    // 8️⃣ Project all required fields
     {
       $project: {
-        userId: 1,
+        customer: {
+          _id: 1,
+          fullName: 1,
+          email: 1,
+          phone: 1,
+        },
         status: 1,
         amount: 1,
         currency: 1,
         service: 1,
         serviceTier: 1,
-        worker: 1,
+        worker: {
+          _id: 1,
+          status: 1,
+          serviceTierIds: 1,
+          location: 1,
+          user: {
+            _id: 1,
+            fullName: 1,
+            email: 1,
+            phone: 1,
+          },
+        },
       },
     },
   ]);
