@@ -217,16 +217,37 @@ export class BookingService {
    * @param userId 
    * @returns BookingDocument
    */
-  async findExistingBooking(userId: Types.ObjectId){
-    const booking = await this.bookingModel.findOne({
+  async findExistingBooking(userId: Types.ObjectId) {
+  const booking = await this.bookingModel
+    .findOne({
       userId,
       status: {
-        $in: [BookingStatus.REQUESTED, BookingStatus.WORKER_ACCEPTED, BookingStatus.WORKER_CANCELLED]
-      }
+        $in: [
+          BookingStatus.REQUESTED,
+          BookingStatus.WORKER_ACCEPTED,
+          BookingStatus.WORKER_CANCELLED,
+        ],
+      },
     })
-    console.log("findExistingBooking result:", booking);
-    return booking;
-  }
+    // Populate the Service document
+    .populate({
+      path: "serviceId",
+      model: "ServiceEntity",
+      select: "name slug description currency pricingTiers iconUrl thumbnailUrl",
+    })
+    // Populate the Service Tier document
+    .populate({
+      path: "serviceTierId",
+      model: "ServiceTier",
+      select: "code displayName description features isActive",
+    })
+    .lean(); // converts to plain JS object
+
+  console.log("findExistingBooking result with service & tier:", booking);
+
+  return booking;
+}
+
 
   async sendBookingRequestNotification(bookingId: Types.ObjectId){
     const booking = await this.bookingModel.findById(bookingId);
