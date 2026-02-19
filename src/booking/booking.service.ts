@@ -217,9 +217,9 @@ export class BookingService {
    * @param userId 
    * @returns BookingDocument
    */
- async findExistingBooking(userId: Types.ObjectId) {
+async findExistingBooking(userId: Types.ObjectId) {
   return this.bookingModel.aggregate([
-    // 1️⃣ Match bookings for this customer and active statuses
+    // 1️⃣ Match bookings for this customer with specific statuses
     {
       $match: {
         userId: new Types.ObjectId(userId),
@@ -233,7 +233,7 @@ export class BookingService {
       },
     },
 
-    // 2️⃣ Lookup service details
+    // 2️⃣ Populate Service
     {
       $lookup: {
         from: "services",
@@ -244,7 +244,7 @@ export class BookingService {
     },
     { $unwind: "$service" },
 
-    // 3️⃣ Lookup serviceTier details
+    // 3️⃣ Populate Service Tier
     {
       $lookup: {
         from: "servicetiers",
@@ -255,29 +255,7 @@ export class BookingService {
     },
     { $unwind: "$serviceTier" },
 
-    // 4️⃣ Lookup worker document
-    {
-      $lookup: {
-        from: "worker",
-        localField: "workerId", // <-- assigned worker
-        foreignField: "_id",
-        as: "worker",
-      },
-    },
-    { $unwind: { path: "$worker", preserveNullAndEmptyArrays: true } },
-
-    // 5️⃣ Lookup worker's user details
-    {
-      $lookup: {
-        from: "users",
-        localField: "worker.userId",
-        foreignField: "_id",
-        as: "workerUser",
-      },
-    },
-    { $unwind: { path: "$workerUser", preserveNullAndEmptyArrays: true } },
-
-    // 6️⃣ Lookup customer details
+    // 4️⃣ Populate Customer info
     {
       $lookup: {
         from: "users",
@@ -288,7 +266,29 @@ export class BookingService {
     },
     { $unwind: "$customer" },
 
-    // 7️⃣ Merge worker and workerUser
+    // 5️⃣ Populate Worker document (if assigned)
+    {
+      $lookup: {
+        from: "worker",
+        localField: "workerId", // ✅ use workerId from Booking
+        foreignField: "_id",
+        as: "worker",
+      },
+    },
+    { $unwind: { path: "$worker", preserveNullAndEmptyArrays: true } },
+
+    // 6️⃣ Populate Worker user info
+    {
+      $lookup: {
+        from: "users",
+        localField: "worker.userId",
+        foreignField: "_id",
+        as: "workerUser",
+      },
+    },
+    { $unwind: { path: "$workerUser", preserveNullAndEmptyArrays: true } },
+
+    // 7️⃣ Merge worker user info into worker
     {
       $addFields: {
         worker: {
@@ -301,36 +301,23 @@ export class BookingService {
       },
     },
 
-    // 8️⃣ Project all required fields
+    // 8️⃣ Project final fields
     {
       $project: {
-        customer: {
-          _id: 1,
-          fullName: 1,
-          email: 1,
-          phone: 1,
-        },
         status: 1,
         amount: 1,
         currency: 1,
+        startedAt: 1,
+        completedAt: 1,
         service: 1,
         serviceTier: 1,
-        worker: {
-          _id: 1,
-          status: 1,
-          serviceTierIds: 1,
-          location: 1,
-          user: {
-            _id: 1,
-            fullName: 1,
-            email: 1,
-            phone: 1,
-          },
-        },
+        customer: 1,
+        worker: 1,
       },
     },
   ]);
 }
+
 
 
   async sendBookingRequestNotification(bookingId: Types.ObjectId){
