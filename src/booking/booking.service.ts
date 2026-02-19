@@ -224,6 +224,7 @@ export class BookingService {
         $in: [BookingStatus.REQUESTED, BookingStatus.WORKER_ACCEPTED, BookingStatus.WORKER_CANCELLED]
       }
     })
+    console.log("findExistingBooking result:", booking);
     return booking;
   }
 
