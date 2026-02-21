@@ -6,7 +6,7 @@ import { GeolocationService } from './geolocation.service';
 export class GeolocationController {
   constructor(private readonly geolocationService: GeolocationService) {}
 
-  // Forward geocoding: address → coordinates
+
   @Get('forward')
   async getCoordinates(@Query('address') address: string) {
     if (!address) return { error: 'Address query is required' };
