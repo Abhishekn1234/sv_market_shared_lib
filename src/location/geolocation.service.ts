@@ -8,30 +8,33 @@ export class GeolocationService {
   constructor(private readonly httpService: HttpService) {}
 
   // ✅ Forward Geocoding: Address → Coordinates
-  async getCoordinates(address: string): Promise<{ lat: number; lng: number } | null> {
-    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-      address,
-    )}&limit=1&accept-language=en&addressdetails=1`;
+  async getCoordinates(address: string): Promise<{ lat: number; lng: number; display_name?: string } | null> {
+  const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+    address,
+  )}&limit=1&accept-language=en&addressdetails=1`;
 
-    try {
-      const response = await firstValueFrom(
-        this.httpService.get<{ lat: string; lon: string }[]>(url, {
-          headers: { Accept: 'application/json' },
-        }),
-      );
+  try {
+    const response = await firstValueFrom(
+      this.httpService.get<
+        { lat: string; lon: string; display_name: string; address: any }[]
+      >(url, { headers: { Accept: 'application/json' } }),
+    );
 
-      const data = response.data;
-      if (!data || data.length === 0) return null;
+    const data = response.data;
+    console.log('Nominatim search result:', data);
 
-      return {
-        lat: parseFloat(data[0].lat),
-        lng: parseFloat(data[0].lon),
-      };
-    } catch (err) {
-      console.error('Geocoding error:', err);
-      return null;
-    }
+    if (!data || data.length === 0) return null;
+
+    return {
+      lat: parseFloat(data[0].lat),
+      lng: parseFloat(data[0].lon),
+      display_name: data[0].display_name,
+    };
+  } catch (err) {
+    console.error('Geocoding error:', err);
+    return null;
   }
+}
 
   // ✅ Reverse Geocoding: Coordinates → Address
   async getAddress(lat: number, lng: number): Promise<string | null> {
