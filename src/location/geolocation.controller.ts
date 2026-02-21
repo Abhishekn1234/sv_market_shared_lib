@@ -18,16 +18,20 @@ export class GeolocationController {
   }
 
   // Reverse geocoding: coordinates → address
-  @Get('reverse')
-  async getAddress(@Query('lat') lat: string, @Query('lon') lon: string) {
-    if (!lat || !lon) return { error: 'Latitude and longitude are required' };
+ @Get('reverse')
+async getAddress(@Query('lat') lat: string, @Query('lon') lon: string) {
+  if (!lat || !lon) return { error: 'Latitude and longitude are required' };
 
-    const address = await this.geolocationService.getAddress(
-      parseFloat(lat),
-      parseFloat(lon),
-    );
+  const latNum = parseFloat(lat);
+  const lonNum = parseFloat(lon);
 
-    if (!address) return { error: 'Unable to fetch address' };
-    return { address };
+  if (isNaN(latNum) || isNaN(lonNum)) {
+    return { error: 'Invalid latitude or longitude' };
   }
+
+  const address = await this.geolocationService.getAddress(latNum, lonNum);
+
+  if (!address) return { error: 'Unable to fetch address' };
+  return { address };
+}
 }
