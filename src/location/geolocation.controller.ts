@@ -34,4 +34,10 @@ async getAddress(@Query('lat') lat: string, @Query('lon') lon: string) {
   if (!address) return { error: 'Unable to fetch address' };
   return { address };
 }
+  @Get('suggestions')
+  async getSuggestions(@Query('q') query: string) {
+    if (!query) return { suggestions: [] };
+    const suggestions = await this.geolocationService.getSuggestions(query);
+    return { suggestions };
+  }
 }

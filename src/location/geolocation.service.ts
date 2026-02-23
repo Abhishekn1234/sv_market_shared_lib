@@ -56,4 +56,17 @@ export class GeolocationService {
       return null;
     }
   }
+  async getSuggestions(query: string): Promise<string[]> {
+    if (!query) return [];
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=jsonv2&limit=5&q=${encodeURIComponent(query)}`
+      );
+      const data: { display_name?: string }[] = await res.json();
+      return data.map(d => d.display_name ?? '');
+    } catch (error) {
+      console.error('GeolocationService.getSuggestions error:', error);
+      return [];
+    }
+  }
 }
