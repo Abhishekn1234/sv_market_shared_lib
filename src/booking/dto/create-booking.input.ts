@@ -22,27 +22,27 @@ export class CreateBookingInput {
   @IsString()
   workDescription?: string;
 
-  // ✅ Service ID (Optional now)
+  
   @ApiPropertyOptional()
-  @IsOptional()
-  @IsMongoId()
-  serviceId?: string;
 
-  // ✅ Service Tier ID (Optional now)
-  @ApiPropertyOptional()
-  @IsOptional()
   @IsMongoId()
-  serviceTierId?: string;
+  serviceId: string;
+
+
+  @ApiPropertyOptional()
+
+  @IsMongoId()
+  serviceTierId: string;
 
   @ApiPropertyOptional({ enum: PricingMode })
-  @IsOptional()
+
   @IsEnum(PricingMode)
-  pricingMode?: PricingMode;
+  pricingMode: PricingMode;
 
   @ApiPropertyOptional()
-  @IsOptional()
+  
   @IsNumber()
-  numberOfWorkers?: number;
+  numberOfWorkers: number;
 
   @ApiPropertyOptional({ enum: BookingType })
   @IsOptional()
@@ -50,7 +50,7 @@ export class CreateBookingInput {
   bookingType?: BookingType;
 
   @ApiPropertyOptional()
-  @IsOptional()
+  
   @IsISO8601()
   startDateTime?: string;
 
@@ -66,11 +66,7 @@ export class CreateBookingInput {
   @Min(1)
   estimatedDays?: number;
 
-  // ✅ Added totalCost
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsNumber()
-  totalCost?: number;
+
 
   @ApiPropertyOptional({
     description: "Current location of the customer or selected location (GeoJSON Point)",
@@ -78,14 +74,8 @@ export class CreateBookingInput {
   @IsOptional()
   @ValidateNested()
   @Type(() => GeoPointDTO)
-  location?: GeoPointDTO;
-  @IsOptional()
-  @IsNumber()
-  memberDiscount?:number;
-
-  @IsOptional()
-  @IsNumber()
-  serviceFee?:number;
+  location: GeoPointDTO;
+  
 
 
 }

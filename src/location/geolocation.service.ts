@@ -65,16 +65,27 @@ export class GeolocationService {
     }
   }
   async getSuggestions(query: string): Promise<string[]> {
-    if (!query) return [];
-    try {
-      const res = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=jsonv2&limit=5&q=${encodeURIComponent(query)}`
-      );
-      const data: { display_name?: string }[] = await res.json();
-      return data.map(d => d.display_name ?? '');
-    } catch (error) {
-      console.error('GeolocationService.getSuggestions error:', error);
-      return [];
-    }
+  if (!query) return [];
+
+  const url = `https://nominatim.openstreetmap.org/search?format=jsonv2&limit=5&q=${encodeURIComponent(
+    query,
+  )}&accept-language=en`;
+
+  try {
+    const response = await firstValueFrom(
+      this.httpService.get<{ display_name?: string }[]>(url, {
+        headers: {
+          'User-Agent': 'svmarket/shared/1.0 (abhishekpes123@gmail.com)',
+          'Accept': 'application/json',
+        },
+      }),
+    );
+
+    const data = response.data;
+    return data.map((d) => d.display_name ?? '');
+  } catch (error) {
+    console.error('GeolocationService.getSuggestions error:', error);
+    return [];
   }
+}
 }
