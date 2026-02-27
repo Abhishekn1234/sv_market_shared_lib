@@ -48,7 +48,10 @@ export class GeolocationService {
     try {
       const response = await firstValueFrom(
         this.httpService.get<any>(url, {
-          headers: { Accept: 'application/json' },
+        headers: {
+          'User-Agent': 'svmarket/shared/1.0 (abhishekpes123@gmail.com)',
+          'Accept': 'application/json',
+        },
         }),
       );
 
